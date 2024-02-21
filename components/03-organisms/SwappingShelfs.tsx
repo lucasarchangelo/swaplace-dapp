@@ -3,11 +3,11 @@ import { NftsShelf } from "@/components/02-molecules";
 import { SwapContext, SwappingShelfID, Tab } from "@/components/01-atoms/";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useContext, useEffect, useState } from "react";
-import { useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 import cc from "classcat";
 
 export const SwappingShelfs = () => {
-  const { chain } = useNetwork();
+  const { chain } = useAccount();
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const [activeSwappingShelfID, setActiveSwappingShelfID] =
     useState<SwappingShelfID>(SwappingShelfID.THEIR_ITEMS);

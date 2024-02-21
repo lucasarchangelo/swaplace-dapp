@@ -3,15 +3,15 @@ import "tailwindcss/tailwind.css";
 import "../styles/global.css";
 
 import {
-  chains,
   getSiweMessageOptions,
   wagmiConfig,
+  queryClient,
 } from "../lib/wallet/wallet-config";
 import { SwapContextProvider } from "@/components/01-atoms";
 
 import { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
-import { WagmiConfig } from "wagmi";
+import { WagmiProvider } from 'wagmi'
 import {
   RainbowKitProvider,
   darkTheme,
@@ -19,40 +19,42 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next-auth";
 import { Toaster } from "react-hot-toast";
+import { QueryClientProvider } from "@tanstack/react-query";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <>
-      <WagmiConfig config={wagmiConfig}>
+      <WagmiProvider config={wagmiConfig}>
         <SwapContextProvider>
           <SessionProvider session={session}>
             <RainbowKitSiweNextAuthProvider
               getSiweMessageOptions={getSiweMessageOptions}
             >
-              <WagmiConfig config={wagmiConfig}>
-                <RainbowKitProvider
-                  theme={{
-                    lightMode: lightTheme({
-                      accentColor: "black",
-                      borderRadius: "small",
-                      overlayBlur: "small",
-                    }),
-                    darkMode: darkTheme({
-                      accentColor: "#888888",
-                      borderRadius: "small",
-                      overlayBlur: "small",
-                    }),
-                  }}
-                  chains={chains}
-                >
-                  <Toaster />
-                  <Component {...pageProps} />
-                </RainbowKitProvider>
-              </WagmiConfig>
+              <WagmiProvider config={wagmiConfig}>
+                <QueryClientProvider client={queryClient}>
+                  <RainbowKitProvider
+                    theme={{
+                      lightMode: lightTheme({
+                        accentColor: "black",
+                        borderRadius: "small",
+                        overlayBlur: "small",
+                      }),
+                      darkMode: darkTheme({
+                        accentColor: "#888888",
+                        borderRadius: "small",
+                        overlayBlur: "small",
+                      }),
+                    }}
+                  >
+                    <Toaster />
+                    <Component {...pageProps} />
+                  </RainbowKitProvider>
+                </QueryClientProvider>
+              </WagmiProvider>
             </RainbowKitSiweNextAuthProvider>
           </SessionProvider>
         </SwapContextProvider>
-      </WagmiConfig>
+      </WagmiProvider>
     </>
   );
 }

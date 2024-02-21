@@ -3,7 +3,7 @@ import { ADDRESS_ZERO, getRpcHttpUrlForNetwork } from "../constants";
 import { EthereumAddress } from "../../shared/types";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { useAccount, useDisconnect, useEnsName, useNetwork } from "wagmi";
+import { useAccount, useDisconnect, useEnsName } from "wagmi";
 
 interface AuthenticatedUserHook {
   loadingEnsName: boolean;
@@ -14,7 +14,7 @@ interface AuthenticatedUserHook {
 }
 
 export const useAuthenticatedUser = (): AuthenticatedUserHook => {
-  const { chain } = useNetwork();
+  const { chain } = useAccount();
   const { disconnect } = useDisconnect();
   const { data: nextAuthUser } = useSession();
   const { address, isConnected } = useAccount();

@@ -9,7 +9,7 @@ import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useContext, useEffect, useState } from "react";
-import { useNetwork, useWalletClient } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import toast from "react-hot-toast";
 
 interface ConfirmSwapModalProps {
@@ -39,7 +39,7 @@ export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
   const [transactionResult, displayTransactionResultModal] =
     useState<null | TransactionResult>(null);
 
-  const { chain } = useNetwork();
+  const { chain } = useAccount();
   const { data: walletClient } = useWalletClient();
 
   useEffect(() => {

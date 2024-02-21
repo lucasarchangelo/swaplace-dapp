@@ -7,7 +7,7 @@ import { NFT, ChainInfo, NFTsQueryStatus } from "@/lib/client/constants";
 import { getNftsFrom } from "@/lib/client/blockchain-data";
 import { EthereumAddress } from "@/lib/shared/types";
 import { useContext, useEffect, useState } from "react";
-import { useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 
 /**
  *
@@ -21,7 +21,7 @@ interface INftsShelfProps {
 }
 
 export const NftsShelf = ({ address }: INftsShelfProps) => {
-  const { chain } = useNetwork();
+  const { chain } = useAccount();
   const [nftsList, setNftsList] = useState<NFT[]>();
   const [nftsQueryStatus, setNftsQueryStatus] = useState<NFTsQueryStatus>(
     NFTsQueryStatus.EMPTY_QUERY

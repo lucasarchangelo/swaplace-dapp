@@ -2,7 +2,7 @@ import { NftCard, SwapContext } from "../01-atoms";
 import { EthereumAddress } from "@/lib/shared/types";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { ChainInfo } from "@/lib/client/constants";
-import { useEnsName, useNetwork } from "wagmi";
+import { useEnsName, useAccount } from "wagmi";
 import { useContext } from "react";
 
 interface IOfferSummary {
@@ -12,7 +12,7 @@ interface IOfferSummary {
 export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
   const { validatedAddressToSwap, nftAuthUser, nftInputUser, destinyChain } =
     useContext(SwapContext);
-  const { chain } = useNetwork();
+  const { chain } = useAccount();
   const { data } = useEnsName({
     address: validatedAddressToSwap as `0x${string}`,
   });

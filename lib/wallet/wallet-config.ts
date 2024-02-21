@@ -1,6 +1,5 @@
-import { getRpcHttpUrlForNetwork } from "../client/constants";
-import { polygonMumbai, sepolia } from "@wagmi/core/chains";
-import { configureChains, createConfig } from "wagmi";
+import { polygonMumbai, sepolia } from "wagmi/chains";
+import { http, createConfig } from "wagmi";
 import {
   trustWallet,
   ledgerWallet,
@@ -10,49 +9,46 @@ import {
   rainbowWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
-import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { QueryClient } from '@tanstack/react-query';
 
-export const { chains, webSocketPublicClient, publicClient } = configureChains(
-  [sepolia, polygonMumbai],
-  [
-    jsonRpcProvider({
-      rpc: (chain) => ({
-        http: getRpcHttpUrlForNetwork.get(chain.id) ?? "",
-      }),
-    }),
-  ]
-);
+// const connectorArgs = {
+//   appName: "Swaplace dApp",
+//   chains: [sepolia, polygonMumbai],
+//   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? "",
+// };
 
-const connectorArgs = {
-  appName: "Swaplace dApp",
-  chains: [sepolia, polygonMumbai],
-  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? "",
-};
-
-const connectors = connectorsForWallets([
-  {
+const connectors = connectorsForWallets(
+  [{
     groupName: "Which wallet will you use?",
     wallets: [
-      injectedWallet(connectorArgs),
-      coinbaseWallet(connectorArgs),
-      ledgerWallet(connectorArgs),
-      trustWallet(connectorArgs),
-      rainbowWallet(connectorArgs),
-      walletConnectWallet(connectorArgs),
+      injectedWallet,
+      coinbaseWallet,
+      ledgerWallet,
+      trustWallet,
+      rainbowWallet,
+      walletConnectWallet,
     ],
+  }],
+  {
+    appName: 'My RainbowKit App',
+    projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? "",
   },
-]);
+);
 
 const wagmiConfig = createConfig({
-  autoConnect: true,
   connectors,
-  publicClient,
-  webSocketPublicClient,
+  chains: [polygonMumbai, sepolia],
+  transports: {
+    [polygonMumbai.id]: http(),
+    [sepolia.id]: http(),
+  },
 });
 
 const getSiweMessageOptions = () => ({
   statement: "Swaplace dApp",
 });
+
+const queryClient = new QueryClient();
 
 export interface AccountProps {
   account: {
@@ -68,4 +64,4 @@ export interface AccountProps {
   };
 }
 
-export { wagmiConfig, getSiweMessageOptions };
+export { wagmiConfig, getSiweMessageOptions, queryClient };
